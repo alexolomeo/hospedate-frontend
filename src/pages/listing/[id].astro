@@ -1,0 +1,31 @@
+---
+import MainLayout from '@/layouts/MainLayout.astro';
+import { fetchListingById } from '../../services/listings.ts';
+import ListingDetail from '@/components/Astro/ListingDetail/ListingDetail.astro';
+import { type ListingDetail as ListingDetailType } from '@/types/listing/listing.ts';
+
+const { params } = Astro;
+const listing: ListingDetailType | null = await fetchListingById(
+  Number(params.id)
+);
+if (!listing) {
+  return new Response(null, { status: 404 });
+}
+---
+
+<MainLayout title={listing.title} isActions={true} isCompactSearch={true}>
+  <ListingDetail listing={listing} />
+
+  <!-- Analytics: Track listing view -->
+  <Fragment slot="scripts">
+    <script define:vars={{ listingId: listing.id, listingTitle: listing.title }}
+    >
+      // Pass data to global scope for the tracking script
+      window.__listingData = {
+        id: listingId,
+        title: listingTitle,
+      };
+    </script>
+    <script src="../../scripts/track-listing-view.ts"></script>
+  </Fragment>
+</MainLayout>

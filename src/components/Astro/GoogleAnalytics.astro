@@ -1,0 +1,23 @@
+---
+/**
+ * GoogleAnalytics component
+ * Initializes Google Analytics when the component is mounted on the client side
+ * Only initializes if PUBLIC_ENABLE_GOOGLE_ANALYTICS is set to 'true'
+ */
+---
+
+<script>
+  import { initializeAnalytics } from '../../services/analytics';
+
+  // Initialize analytics when the page loads
+  if (typeof window !== 'undefined') {
+    // Wait for the page to be fully loaded
+    if (document.readyState === 'complete') {
+      initializeAnalytics();
+    } else {
+      window.addEventListener('load', () => {
+        initializeAnalytics();
+      });
+    }
+  }
+</script>
