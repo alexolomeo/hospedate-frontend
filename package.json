@@ -1,12 +1,14 @@
 {
   "name": "hospedate",
   "type": "module",
+  "main": "index.mjs",
   "version": "1.7.0",
   "scripts": {
     "dev": "astro dev",
     "prebuild": "node src/scripts/generate-sw.js",
     "build": "astro build",
     "preview": "astro preview",
+    "start": "node dist",
     "astro": "astro",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
@@ -86,6 +88,7 @@
     "@types/testing-library__react": "^10.2.0",
     "@types/validator": "^13.15.1",
     "@typescript-eslint/parser": "^8.29.1",
+    "astro-sst": "^3.1.4",
     "daisyui": "^5.0.0",
     "dotenv": "^16.4.7",
     "eslint": "^9.24.0",

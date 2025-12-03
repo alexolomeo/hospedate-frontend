@@ -5,7 +5,7 @@ import tailwindcss from '@tailwindcss/vite';
 
 import icon from 'astro-icon';
 
-import node from '@astrojs/node';
+import aws from "astro-sst";
 
 import react from '@astrojs/react';
 
@@ -40,9 +40,12 @@ export default defineConfig({
   },
   integrations: [icon(), react()],
   output: 'server',
-  adapter: node({
-    mode: 'standalone',
-  }),
+  ssr: true,
+  adapter: aws(),
+  server: {
+    // Desactiva el prefetch innecesario para SSR AWS
+    prefetch: false,
+  },	
   compressHTML: true,
   build: {
     inlineStylesheets: 'auto',

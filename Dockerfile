@@ -1,23 +1,31 @@
-# Use Node.js 22 Alpine as the base image
-FROM node:22-alpine
-
-# Set working directory
+# ---------- BUILD ----------
+FROM node:22 AS builder
 WORKDIR /app
 
-# Copy package.json and lock file
 COPY package*.json ./
-
-# Install dependencies
 RUN npm ci
 
-# Copy the rest of your project
 COPY . .
+COPY .env .env
+RUN npx astro build
 
-# Build the production version of the app
-RUN npm run build
 
-# Expose Astro’s default port
-EXPOSE 3000
+# ---------- RUNTIME: Lambda Node.js 22 ----------
+FROM public.ecr.aws/lambda/nodejs:22
 
-# Start the preview server
-CMD ["npm", "run", "preview"]
+WORKDIR /var/task
+
+# Copiar build final
+COPY --from=builder /app/dist/server ./dist/server
+COPY --from=builder /app/dist/client ./export/s3
+COPY --from=builder /app/package.json ./package.json
+COPY --from=builder /app/node_modules ./node_modules
+COPY --from=builder /app/.env ./.env
+
+
+
+# Copiamos el wrapper para Lambda
+COPY index.mjs ./index.mjs
+
+# Lambda ejecutará este archivo como handler
+CMD [ "index.handler" ]
