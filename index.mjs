@@ -13,6 +13,8 @@ export const handler = async (event, context) => {
       headers: {
         'Content-Type': 'text/html', // El tipo de contenido
         'Access-Control-Allow-Origin': '*', // Permite acceso desde cualquier origen (CORS)
+	"Access-Control-Allow-Methods": "OPTIONS, GET, POST, PUT",
+        "Access-Control-Allow-Headers": "Content-Type, Authorization",
       },
       body: response.body, // El contenido generado por AstroJS (HTML o JSON)
     };
